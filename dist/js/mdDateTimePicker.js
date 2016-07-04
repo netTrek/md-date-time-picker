@@ -1,21 +1,29 @@
 (function (global, factory) {
 	if (typeof define === "function" && define.amd) {
-		define(['exports'], factory);
+		define(['exports', 'moment'], factory);
 	} else if (typeof exports !== "undefined") {
-		factory(exports);
+		factory(exports, require('moment'));
 	} else {
 		var mod = {
 			exports: {}
 		};
-		factory(mod.exports);
+		factory(mod.exports, global.moment);
 		global.mdDateTimePicker = mod.exports;
 	}
-})(this, function (exports) {
+})(this, function (exports, _moment) {
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	function _interopRequireDefault(obj) {
+		return obj && obj.__esModule ? obj : {
+			default: obj
+		};
+	}
 
 	function _classCallCheck(instance, Constructor) {
 		if (!(instance instanceof Constructor)) {
@@ -39,12 +47,9 @@
 			if (staticProps) defineProperties(Constructor, staticProps);
 			return Constructor;
 		};
-	}(),
-	    _dialog = {
-		view: !0,
-		state: !1
-	},
-	    mdDateTimePicker = function () {
+	}();
+
+	var mdDateTimePicker = function () {
 		/**
   * [constructor of the mdDateTimePicker]
   *
@@ -67,9 +72,9 @@
 		function mdDateTimePicker(_ref) {
 			var type = _ref.type,
 			    _ref$init = _ref.init,
-			    init = _ref$init === undefined ? moment() : _ref$init,
+			    init = _ref$init === undefined ? (0, _moment2.default)() : _ref$init,
 			    _ref$past = _ref.past,
-			    past = _ref$past === undefined ? moment().subtract(21, 'years') : _ref$past,
+			    past = _ref$past === undefined ? (0, _moment2.default)().subtract(21, 'years') : _ref$past,
 			    _ref$future = _ref.future,
 			    future = _ref$future === undefined ? init : _ref$future,
 			    _ref$mode = _ref.mode,
@@ -101,6 +106,7 @@
 			/**
    * [dialog selected classes have the same structure as dialog but one level down]
    * @type {Object}
+   * All declarations starting with _ are considered @private
    * e.g
    * sDialog = {
    *   picker: 'some-picker-selected'
@@ -597,8 +603,8 @@
 				}
 				this._sDialog.tDate = m;
 				this._initMonth(current, m);
-				this._initMonth(next, moment(this._getMonth(m, 1)));
-				this._initMonth(previous, moment(this._getMonth(m, -1)));
+				this._initMonth(next, (0, _moment2.default)(this._getMonth(m, 1)));
+				this._initMonth(previous, (0, _moment2.default)(this._getMonth(m, -1)));
 				this._toMoveMonth();
 			}
 		}, {
@@ -611,22 +617,21 @@
 				this._fillText(innerDivs[0], displayMonth);
 				var docfrag = document.createDocumentFragment(),
 				    tr = innerDivs[3],
-				    firstDayOfMonth = moment.weekdays(!0).indexOf(moment.weekdays(!1, moment(m).date(1).day())),
+				    firstDayOfMonth = _moment2.default.weekdays(!0).indexOf(_moment2.default.weekdays(!1, (0, _moment2.default)(m).date(1).day())),
 				    today = -1,
 				    selected = -1,
-				    lastDayOfMonth = parseInt(moment(m).endOf('month').format('D'), 10) + firstDayOfMonth - 1,
+				    lastDayOfMonth = parseInt((0, _moment2.default)(m).endOf('month').format('D'), 10) + firstDayOfMonth - 1,
 				    past = firstDayOfMonth,
 				    cellClass = 'mddtp-picker__cell',
 				    future = lastDayOfMonth;
 				// get the .mddtp-picker__tr element using innerDivs[3]
 
 				/*
-    netTrek - first day of month dependented from moment.locale
-    //parseInt(moment(m).date(1).day(), 10)
+    * @netTrek - first day of month dependented from moment.locale
     */
 
-				if (moment().isSame(m, 'month')) {
-					today = parseInt(moment().format('D'), 10);
+				if ((0, _moment2.default)().isSame(m, 'month')) {
+					today = parseInt((0, _moment2.default)().format('D'), 10);
 					today += firstDayOfMonth - 1;
 				}
 				if (this._past.isSame(m, 'month')) {
@@ -638,7 +643,7 @@
 					future += firstDayOfMonth - 1;
 				}
 				if (this._sDialog.sDate.isSame(m, 'month')) {
-					selected = parseInt(moment(m).format('D'), 10);
+					selected = parseInt((0, _moment2.default)(m).format('D'), 10);
 					selected += firstDayOfMonth - 1;
 				}
 				for (var i = 0; i < 42; i++) {
@@ -1067,102 +1072,7 @@
 				    selected = 'mddtp-picker__cell--selected',
 				    rotate = 'mddtp-picker__cell--rotate-',
 				    hOffset = circularHolder.getBoundingClientRect(),
-				    divides = void 0,
-				    fakeNeedleDraggabilly = new Draggabilly(fakeNeedle, {
-					containment: !0
-				});
-
-				fakeNeedleDraggabilly.on('pointerDown', function (e) {
-					console.info('pointerDown', e);
-					hOffset = circularHolder.getBoundingClientRect();
-				});
-				/**
-     * netTrek
-     * fixes for iOS - drag
-     */
-				fakeNeedleDraggabilly.on('pointerMove', function (e) {
-
-					var clientX = e.clientX,
-					    clientY = e.clientY;
-
-
-					if (clientX === undefined) {
-
-						if (e.pageX === undefined) {
-							if (e.touches && e.touches.length > 0) {
-								clientX = e.touches[0].clientX;
-								clientY = e.touches[0].clientY;
-							} else {
-								console.error('coult not detect pageX, pageY');
-							}
-						} else {
-							clientX = pageX - document.body.scrollLeft - document.documentElement.scrollLeft;
-							clientY = pageY - document.body.scrollTop - document.documentElement.scrollTop;
-						}
-					}
-					console.info('Drag clientX', clientX, clientY, e);
-
-					var xPos = clientX - hOffset.left - hOffset.width / 2,
-					    yPos = clientY - hOffset.top - hOffset.height / 2,
-					    slope = Math.atan2(-yPos, xPos);
-
-					needle.className = '';
-					if (slope < 0) {
-						slope += 2 * Math.PI;
-					}
-					slope *= 180 / Math.PI;
-					slope = 360 - slope;
-					if (slope > 270) {
-						slope -= 360;
-					}
-					divides = parseInt(slope / 6);
-					var same = Math.abs(6 * divides - slope),
-					    upper = Math.abs(6 * (divides + 1) - slope);
-
-					if (upper < same) {
-						divides++;
-					}
-					divides += 15;
-					needle.classList.add(selection);
-					needle.classList.add(quick);
-					needle.classList.add(rotate + divides * 2);
-				});
-				/**
-     * netTrek
-     * fixes for iOS - drag
-     */
-				fakeNeedleDraggabilly.on('pointerUp', function (e) {
-					var minuteViewChildren = me._sDialog.minuteView.getElementsByTagName('div'),
-					    sMinute = 'mddtp-minute__selected',
-					    selectedMinute = document.getElementById(sMinute),
-					    cOffset = circle.getBoundingClientRect();
-
-					fakeNeedle.setAttribute('style', 'left:' + (cOffset.left - hOffset.left) + 'px;top:' + (cOffset.top - hOffset.top) + 'px');
-					needle.classList.remove(quick);
-					var select = divides;
-					if (select === 1) {
-						select = 60;
-					}
-					select = me._nearestDivisor(select, 5);
-					// normalize 60 => 0
-					if (divides === 60) {
-						divides = 0;
-					}
-					// remove previously selected value
-					if (selectedMinute) {
-						selectedMinute.id = '';
-						selectedMinute.classList.remove(selected);
-					}
-					// add the new selected
-					if (select > 0) {
-						select /= 5;
-						select--;
-						minuteViewChildren[select].id = sMinute;
-						minuteViewChildren[select].classList.add(selected);
-					}
-					minute.textContent = me._numWithZero(divides);
-					me._sDialog.sDate.minutes(divides);
-				});
+				    divides = void 0;
 			}
 		}, {
 			key: '_attachEventHandlers',
@@ -1256,12 +1166,11 @@
 				    grid = document.createElement('div'),
 				    th = document.createElement('div'),
 				    tr = document.createElement('div'),
-				    weekDays = moment.weekdaysMin(!0).reverse(),
+				    weekDays = _moment2.default.weekdaysMin(!0).reverse(),
 				    week = 7;
-				/*
-     netTrek - weekday dependented from moment.locale
-     //['S', 'F', 'T', 'W', 'T', 'M', 'S']
-     */
+				/**
+    * @netTrek - weekday dependented from moment.locale
+    */
 
 				while (week--) {
 					var span = document.createElement('span');
@@ -1320,7 +1229,7 @@
 		}], [{
 			key: 'dialog',
 			get: function get() {
-				return _dialog;
+				return mdDateTimePicker._dialog;
 			},
 			set: function set(value) {
 				mdDateTimePicker.dialog = value;
@@ -1329,6 +1238,11 @@
 
 		return mdDateTimePicker;
 	}();
+
+	mdDateTimePicker._dialog = {
+		view: !0,
+		state: !1
+	};
 
 	exports.default = mdDateTimePicker;
 });

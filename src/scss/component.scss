@@ -325,15 +325,15 @@
   border-radius: 50%;
   height: 36px;
   width: 36px;
-  cursor: move; /* fallback if grab cursor is unsupported */
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
+ // cursor: move; /* fallback if grab cursor is unsupported */
+ // cursor: grab;
+ // cursor: -moz-grab;
+ // cursor: -webkit-grab;
 
   &.is-pointer-down,&:active {
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
+  //  cursor: grabbing;
+  //  cursor: -moz-grabbing;
+  //  cursor: -webkit-grabbing;
   }
 }
 

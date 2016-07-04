@@ -10,7 +10,7 @@
 * import necessary components
 */
 import moment from 'moment'
-import Draggabilly from 'Draggabilly'
+// import Draggabilly from 'Draggabilly'
 
 class mdDateTimePicker {
 	/**
@@ -1091,98 +1091,6 @@ class mdDateTimePicker {
 		let rotate = 'mddtp-picker__cell--rotate-'
 		let hOffset = circularHolder.getBoundingClientRect()
 		let divides
-		let fakeNeedleDraggabilly = new Draggabilly(fakeNeedle, {
-			containment: true
-		})
-		fakeNeedleDraggabilly.on('pointerDown', function( e ) {
-			//console.info ( 'pointerDown' , e );
-			hOffset = circularHolder.getBoundingClientRect()
-		})
-		/**
-		 * netTrek
-		 * fixes for iOS - drag
-		 */
-		fakeNeedleDraggabilly.on('pointerMove', function(e) {
-
-			var clientX = e.clientX
-			var clientY = e.clientY
-
-			if ( clientX === undefined ) {
-
-				if ( e.pageX === undefined ) {
-					if ( e.touches && e.touches.length > 0 )
-					{
-						clientX = e.touches [0].clientX
-						clientY = e.touches [0].clientY
-					} else {
-						console.error( 'coult not detect pageX, pageY')
-					}
-				} else {
-					clientX = pageX - document.body.scrollLeft - document.documentElement.scrollLeft
-					clientY = pageY - document.body.scrollTop - document.documentElement.scrollTop
-				}
-			}
-			//console.info ( 'Drag clientX' , clientX, clientY, e );
-
-			let xPos = clientX - hOffset.left - (hOffset.width / 2)
-			let yPos = clientY - hOffset.top - (hOffset.height / 2)
-
-			let slope = Math.atan2(-yPos, xPos)
-			needle.className = ''
-			if (slope < 0) {
-				slope += 2 * Math.PI
-			}
-			slope *= 180 / Math.PI
-			slope = 360 - slope
-			if (slope > 270) {
-				slope -= 360
-			}
-			divides = parseInt(slope / 6)
-			let same = Math.abs((6 * divides) - slope)
-			let upper = Math.abs((6 * (divides + 1)) - slope)
-			if (upper < same) {
-				divides++
-			}
-			divides += 15
-			needle.classList.add(selection)
-			needle.classList.add(quick)
-			needle.classList.add(rotate + (divides * 2))
-		})
-		/**
-		 * netTrek
-		 * fixes for iOS - drag
-		 */
-		fakeNeedleDraggabilly.on('pointerUp', function( e ) {
-			let minuteViewChildren = me._sDialog.minuteView.getElementsByTagName('div')
-			let sMinute = 'mddtp-minute__selected'
-			let selectedMinute = document.getElementById(sMinute)
-			let cOffset = circle.getBoundingClientRect()
-			fakeNeedle.setAttribute('style', 'left:' + (cOffset.left - hOffset.left) + 'px;top:' + (cOffset.top - hOffset.top) + 'px')
-			needle.classList.remove(quick)
-			let select = divides
-			if (select === 1) {
-				select = 60
-			}
-			select = me._nearestDivisor(select, 5)
-			// normalize 60 => 0
-			if (divides === 60) {
-				divides = 0
-			}
-			// remove previously selected value
-			if (selectedMinute) {
-				selectedMinute.id = ''
-				selectedMinute.classList.remove(selected)
-			}
-			// add the new selected
-			if (select > 0) {
-				select /= 5
-				select--
-				minuteViewChildren[select].id = sMinute
-				minuteViewChildren[select].classList.add(selected)
-			}
-			minute.textContent = me._numWithZero(divides)
-			me._sDialog.sDate.minutes(divides)
-		})
 	}
 
 	/**
