@@ -102,7 +102,7 @@ class mdDateTimePicker {
 	*
 	*/
 	toggle() {
-		this._selectDialog()
+		// this._selectDialog()
 		// work according to the current state of the dialog
 		if (mdDateTimePicker.dialog.state) {
 			this.close()
@@ -112,15 +112,21 @@ class mdDateTimePicker {
 	}
 
 	open() {
-		if (this._type === 'date') {
-			this._initDateDialog(this._init)
-		} else if (this._type === 'time') {
-			this._initTimeDialog(this._init)
+		this._selectDialog()
+		if ( !mdDateTimePicker.dialog.state ) {
+			if (this._type === 'date') {
+				this._initDateDialog(this._init)
+			} else if (this._type === 'time') {
+				this._initTimeDialog(this._init)
+			}
+			this._showDialog()
 		}
-		this._showDialog()
 	}
 	close () {
-		this._hideDialog()
+		this._selectDialog()
+		if (mdDateTimePicker.dialog.state) {
+			this._hideDialog()
+		}
 	}
 
 	/**
