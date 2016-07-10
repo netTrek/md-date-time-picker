@@ -132,17 +132,33 @@
 		_createClass(mdDateTimePicker, [{
 			key: 'toggle',
 			value: function toggle() {
-				this._selectDialog();
+				// this._selectDialog()
 				// work according to the current state of the dialog
 				if (mdDateTimePicker.dialog.state) {
-					this._hideDialog();
+					this.close();
 				} else {
+					this.open();
+				}
+			}
+		}, {
+			key: 'open',
+			value: function open() {
+				this._selectDialog();
+				if (!mdDateTimePicker.dialog.state) {
 					if (this._type === 'date') {
 						this._initDateDialog(this._init);
 					} else if (this._type === 'time') {
 						this._initTimeDialog(this._init);
 					}
 					this._showDialog();
+				}
+			}
+		}, {
+			key: 'close',
+			value: function close() {
+				this._selectDialog();
+				if (mdDateTimePicker.dialog.state) {
+					this._hideDialog();
 				}
 			}
 		}, {
