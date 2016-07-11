@@ -55,9 +55,7 @@
     "run-sequence": "^1.2.2"
   },
   "dependencies": {
-    "draggabilly": "^2.1.1"
-  },
-  "peerDependencies": {
+    "draggabilly": "^2.1.1",
     "moment": "^2.14.1"
   },
   "repository": {
