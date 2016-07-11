@@ -112,8 +112,8 @@ class mdDateTimePicker {
 	}
 
 	open() {
-		this._selectDialog()
 		if ( !mdDateTimePicker.dialog.state ) {
+			this._selectDialog()
 			if (this._type === 'date') {
 				this._initDateDialog(this._init)
 			} else if (this._type === 'time') {
@@ -123,8 +123,8 @@ class mdDateTimePicker {
 		}
 	}
 	close () {
-		this._selectDialog()
 		if (mdDateTimePicker.dialog.state) {
+			this._selectDialog()
 			this._hideDialog()
 		}
 	}
